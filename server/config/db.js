@@ -1,14 +1,16 @@
-// config/db.js
 const { Pool } = require('pg');
-require('dotenv').config();
 
+// Replace these values with your actual database connection details
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  user: 'example_customer',
+  host: 'localhost',
+  database: 'ecom_app',
+  password: 'example_customer',
+  port: 5432,
 });
 
-pool.connect();
+pool.on('connect', () => {
+  console.log('connected to the db');
+});
 
 module.exports = pool;
