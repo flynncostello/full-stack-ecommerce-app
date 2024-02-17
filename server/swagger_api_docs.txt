@@ -1,0 +1,1691 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Ecommerce Store API - OpenAPI 3.0
+  description: |-
+    This is an API for an ecommerce store. It includes paths to user information, order information, checkout information, carts, and products.
+tags:
+  - name: users
+    description: All information related to user
+  - name: user_addresses
+    description: All information related to a user's address
+  - name: user_payment_methods
+    description: All information related to a user's payment methods
+  - name: products
+    description: All information related to store's products
+  - name: carts
+    description: All information related to the cart's of users
+  - name: cart_items
+    description: All information related to cart's items
+  - name: checkouts
+    description: All information related to the checkout sessions of users
+  - name: orders
+    description: All information related to user's current and past orders
+  - name: order_items
+    description: All information related to order's items
+  - name: order_status
+    description: All information related to order's status
+
+paths:
+  /api/users:
+    get:
+      tags:
+        - users
+      summary: Get all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                users:
+                  - id: 1
+                    username: "john_doe"
+                    firstName: "John"
+                    lastName: "Doe"
+                    email: "john@example.com"
+                    phone: "123-456-7890"
+                  - id: 2
+                    username: "jane_smith"
+                    firstName: "Jane"
+                    lastName: "Smith"
+                    email: "jane@example.com"
+                    phone: "987-654-3210"
+
+    post:
+      tags:
+        - users
+      summary: Create a new user
+      operationId: createUser
+      requestBody:
+        description: User details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username for the new user
+                firstName:
+                  type: string
+                  description: First name of the new user
+                lastName:
+                  type: string
+                  description: Last name of the new user
+                email:
+                  type: string
+                  format: email
+                  description: Email address of the new user
+                phone:
+                  type: string
+                  description: Phone number of the new user
+              required:
+                - username
+                - firstName
+                - lastName
+                - email
+                - phone
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                user:
+                  id: 3
+                  username: "alice_jones"
+                  firstName: "Alice"
+                  lastName: "Jones"
+                  email: "alice@example.com"
+                  phone: "456-789-0123"
+
+  /api/users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Get specific user by ID
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                user:
+                  id: 1
+                  username: "john_doe"
+                  firstName: "John"
+                  lastName: "Doe"
+                  email: "john@example.com"
+                  phone: "123-456-7890"
+        '404':
+          description: User not found
+
+    put:
+      tags:
+        - users
+      summary: Update an existing user by ID
+      operationId: updateUserById
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated user details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Updated username for the user
+                firstName:
+                  type: string
+                  description: Updated first name of the user
+                lastName:
+                  type: string
+                  description: Updated last name of the user
+                email:
+                  type: string
+                  format: email
+                  description: Updated email address of the user
+                phone:
+                  type: string
+                  description: Updated phone number of the user
+              required:
+                - username
+                - firstName
+                - lastName
+                - email
+                - phone
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                user:
+                  id: 1
+                  username: "john_doe"
+                  firstName: "John"
+                  lastName: "Doe"
+                  email: "john@example.com"
+                  phone: "123-456-7890"
+
+    delete:
+      tags:
+        - users
+      summary: Delete user by ID
+      operationId: deleteUserById
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user to be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+
+  /api/users/{userId}/address:
+    get:
+      tags:
+        - user_addresses
+      summary: Get user address
+      operationId: getUserAddress
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                address_id: 1
+                user_id: 1
+                address_line1: "123 Main Street"
+                address_line2: "Apt 4B"
+                city: "Example City"
+                postal_code: "12345"
+                country: "Example Country"
+                created_at: "2022-02-17T12:34:56Z"
+
+    post:
+      tags:
+        - user_addresses
+      summary: Create user address
+      operationId: createUserAddress
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User address details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address_line1:
+                  type: string
+                address_line2:
+                  type: string
+                city:
+                  type: string
+                postal_code:
+                  type: string
+                country:
+                  type: string
+              required:
+                - address_line1
+                - city
+                - postal_code
+                - country
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                address_id: 2
+                user_id: 1
+                address_line1: "456 Oak Avenue"
+                address_line2: "Unit 8C"
+                city: "Example City"
+                postal_code: "67890"
+                country: "Example Country"
+                created_at: "2022-02-17T13:45:23Z"
+
+  /api/users/{userId}/address/{addressId}:
+    put:
+      tags:
+        - user_addresses
+      summary: Update user address
+      operationId: updateUserAddress
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: addressId
+          in: path
+          description: ID of the address
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated user address details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address_line1:
+                  type: string
+                address_line2:
+                  type: string
+                city:
+                  type: string
+                postal_code:
+                  type: string
+                country:
+                  type: string
+              required:
+                - address_line1
+                - city
+                - postal_code
+                - country
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                address_id: 2
+                user_id: 1
+                address_line1: "456 Oak Avenue"
+                address_line2: "Unit 8C"
+                city: "Example City"
+                postal_code: "67890"
+                country: "Example Country"
+                created_at: "2022-02-17T13:45:23Z"
+
+    delete:
+      tags:
+        - user_addresses
+      summary: Delete user address
+      operationId: deleteUserAddress
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: addressId
+          in: path
+          description: ID of the address
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+
+  /api/users/{userId}/paymentMethods:
+    get:
+      tags:
+        - user_payment_methods
+      summary: Get user payment methods
+      operationId: getUserPaymentMethods
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                payment_method_id: 1
+                user_id: 1
+                payment_method_type: "Credit Card"
+                card_number: "1234567890123456"
+                expiration_date: "2023-12-31"
+                holder_name: "John Doe"
+                cvc: 123
+                created_at: "2022-02-17T14:56:34Z"
+
+    post:
+      tags:
+        - user_payment_methods
+      summary: Create user payment method
+      operationId: createUserPaymentMethod
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User payment method details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_method_type:
+                  type: string
+                card_number:
+                  type: string
+                expiration_date:
+                  type: string
+                  format: date
+                holder_name:
+                  type: string
+                cvc:
+                  type: integer
+              required:
+                - payment_method_type
+                - card_number
+                - expiration_date
+                - holder_name
+                - cvc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                payment_method_id: 2
+                user_id: 1
+                payment_method_type: "Debit Card"
+                card_number: "9876543210987654"
+                expiration_date: "2024-06-30"
+                holder_name: "Jane Smith"
+                cvc: 456
+                created_at: "2022-02-17T15:45:12Z"
+
+  /api/users/{userId}/paymentMethods/{paymentMethodId}:
+    put:
+      tags:
+        - user_payment_methods
+      summary: Update user payment method
+      operationId: updateUserPaymentMethod
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: paymentMethodId
+          in: path
+          description: ID of the payment method
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated user payment method details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_method_type:
+                  type: string
+                card_number:
+                  type: string
+                expiration_date:
+                  type: string
+                  format: date
+                holder_name:
+                  type: string
+                cvc:
+                  type: integer
+              required:
+                - payment_method_type
+                - card_number
+                - expiration_date
+                - holder_name
+                - cvc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                payment_method_id: 2
+                user_id: 1
+                payment_method_type: "Debit Card"
+                card_number: "9876543210987654"
+                expiration_date: "2024-06-30"
+                holder_name: "Jane Smith"
+                cvc: 456
+                created_at: "2022-02-17T15:45:12Z"
+
+    delete:
+      tags:
+        - user_payment_methods
+      summary: Delete user payment method
+      operationId: deleteUserPaymentMethod
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: paymentMethodId
+          in: path
+          description: ID of the payment method
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+
+
+  /api/products:
+    get:
+      tags:
+        - products
+      summary: Get all products
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                - product_id: 1
+                  name: "Product A"
+                  description: "Description of Product A"
+                  price: 29.99
+                  category: "Category A"
+                  inventory: 100
+                  created_at: "2022-02-17T16:30:45Z"
+                - product_id: 2
+                  name: "Product B"
+                  description: "Description of Product B"
+                  price: 19.99
+                  category: "Category B"
+                  inventory: 50
+                  created_at: "2022-02-17T16:45:12Z"
+
+    post:
+      tags:
+        - products
+      summary: Create a new product
+      operationId: createProduct
+      requestBody:
+        description: Product details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                description:
+                  type: string
+                price:
+                  type: number
+                category:
+                  type: string
+                  maxLength: 50
+                inventory:
+                  type: integer
+              required:
+                - name
+                - price
+                - category
+                - inventory
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                product_id: 3
+                name: "Product C"
+                description: "Description of Product C"
+                price: 39.99
+                category: "Category C"
+                inventory: 75
+                created_at: "2022-02-17T17:15:30Z"
+
+  /api/products/{productId}:
+    get:
+      tags:
+        - products
+      summary: Get specific product
+      operationId: getProductById
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                product_id: 1
+                name: "Product A"
+                description: "Description of Product A"
+                price: 29.99
+                category: "Category A"
+                inventory: 100
+                created_at: "2022-02-17T16:30:45Z"
+
+    put:
+      tags:
+        - products
+      summary: Update a product
+      operationId: updateProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated product details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 100
+                description:
+                  type: string
+                price:
+                  type: number
+                category:
+                  type: string
+                  maxLength: 50
+                inventory:
+                  type: integer
+              required:
+                - name
+                - price
+                - category
+                - inventory
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                product_id: 1
+                name: "Updated Product A"
+                description: "Updated Description of Product A"
+                price: 34.99
+                category: "Updated Category A"
+                inventory: 90
+                created_at: "2022-02-17T17:45:00Z"
+
+    delete:
+      tags:
+        - products
+      summary: Delete a product
+      operationId: deleteProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+
+  
+  /api/users/{userId}/cart:
+    get:
+      tags:
+        - carts
+      summary: Get user cart
+      operationId: getUserCart
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                cart_id: 1
+                user_id: 101
+                created_at: "2022-02-17T18:00:00Z"
+
+    post:
+      tags:
+        - carts
+      summary: Create user cart
+      operationId: createUserCart
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                cart_id: 2
+                user_id: 101
+                created_at: "2022-02-17T18:10:00Z"
+
+    delete:
+      tags:
+        - carts
+      summary: Delete user cart
+      operationId: deleteUserCart
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+  
+  /api/users/{userId}/cart/items:
+    get:
+      tags:
+        - cart_items
+      summary: Get all cart items
+      operationId: getAllCartItems
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                - cart_item_id: 1
+                  cart_id: 1
+                  product_id: 101
+                  quantity: 2
+                  created_at: "2022-02-17T18:15:00Z"
+                - cart_item_id: 2
+                  cart_id: 1
+                  product_id: 102
+                  quantity: 1
+                  created_at: "2022-02-17T18:20:00Z"
+
+    post:
+      tags:
+        - cart_items
+      summary: Create cart item
+      operationId: createCartItem
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Cart item details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  type: integer
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+              required:
+                - cart_id
+                - product_id
+                - quantity
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                cart_item_id: 3
+                cart_id: 2
+                product_id: 103
+                quantity: 3
+                created_at: "2022-02-17T18:45:00Z"
+
+  /api/users/{userId}/cart/items/{productId}:
+    get:
+      tags:
+        - cart_items
+      summary: Get specific cart item
+      operationId: getCartItemByProductId
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: productId
+          in: path
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                cart_item_id: 3
+                cart_id: 2
+                product_id: 103
+                quantity: 5
+                created_at: "2022-02-17T18:45:00Z"
+
+    put:
+      tags:
+        - cart_items
+      summary: Update cart item
+      operationId: updateCartItem
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: productId
+          in: path
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated cart item details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+              required:
+                - quantity
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                cart_item_id: 3
+                cart_id: 2
+                product_id: 103
+                quantity: 5
+                created_at: "2022-02-17T18:45:00Z"
+
+    delete:
+      tags:
+        - cart_items
+      summary: Delete cart item
+      operationId: deleteCartItem
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: productId
+          in: path
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+
+  /api/users/{userId}/checkouts:
+    get:
+      tags:
+        - checkouts
+      summary: Get user checkout session
+      operationId: getUserCheckoutSession
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                checkout_id: 1
+                user_id: 1
+                cart_id: 1
+                checkout_time: "2022-02-17T19:30:00Z"
+
+    post:
+      tags:
+        - checkouts
+      summary: Create user checkout session
+      operationId: createUserCheckoutSession
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Checkout session details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  type: integer
+              required:
+                - cart_id
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                checkout_id: 2
+                user_id: 1
+                cart_id: 2
+                checkout_time: "2022-02-17T20:00:00Z"
+
+    delete:
+      tags:
+        - checkouts
+      summary: Delete user checkout session
+      operationId: deleteUserCheckoutSession
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+
+  /api/users/{userId}/orders:
+    get:
+      tags:
+        - orders
+      summary: Get all user orders
+      operationId: getAllUserOrders
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                - order_id: 1
+                  user_id: 1
+                  checkout_id: 1
+                  order_date: "2022-02-17T20:30:00Z"
+                - order_id: 2
+                  user_id: 1
+                  checkout_id: 2
+                  order_date: "2022-02-17T21:00:00Z"
+
+    post:
+      tags:
+        - orders
+      summary: Create new user order
+      operationId: createUserOrder
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Order details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                checkout_id:
+                  type: integer
+              required:
+                - checkout_id
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                order_id: 3
+                user_id: 1
+                checkout_id: 3
+                order_date: "2022-02-17T21:30:00Z"
+
+  /api/users/{userId}/orders/{orderId}:
+    get:
+      tags:
+        - orders
+      summary: Get specific user order
+      operationId: getUserOrder
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                order_id: 3
+                user_id: 1
+                checkout_id: 3
+                order_date: "2022-02-17T21:30:00Z"
+
+    delete:
+      tags:
+        - orders
+      summary: Delete user order
+      operationId: deleteUserOrder
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+
+  /api/users/{userId}/orders/{orderId}/items:
+    get:
+      tags:
+        - order_items
+      summary: Get all order items for a specific order
+      operationId: getAllOrderItems
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                - order_item_id: 1
+                  order_id: 1
+                  product_id: 101
+                  quantity: 2
+                  created_at: "2022-02-17T22:00:00Z"
+                - order_item_id: 2
+                  order_id: 1
+                  product_id: 102
+                  quantity: 1
+                  created_at: "2022-02-17T22:15:00Z"
+
+    post:
+      tags:
+        - order_items
+      summary: Create order item for a specific order
+      operationId: createOrderItem
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Order item details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+              required:
+                - product_id
+                - quantity
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                order_item_id: 3
+                order_id: 1
+                product_id: 103
+                quantity: 3
+                created_at: "2022-02-17T22:30:00Z"
+                
+  /api/users/{userId}/orders/{orderId}/items/{productId}:
+    get:
+      tags:
+        - order_items
+      summary: Get specific order item for a specific order and product
+      operationId: getOrderItem
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: productId
+          in: path
+          description: ID of the product
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                order_item_id: 2
+                order_id: 1
+                product_id: 102
+                quantity: 1
+                created_at: "2022-02-17T22:15:00Z"
+
+
+  /api/users/{userId}/orders/{orderId}/status:
+    get:
+      tags:
+        - order_status
+      summary: Get order status for a specific order
+      operationId: getOrderStatus
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status_id: 1
+                order_id: 1
+                status_name: "Processing"
+                paid: true
+                paid_date: "2022-02-17"
+                posted: false
+                posted_date: null
+                delivered: false
+                delivered_date: null
+                created_at: "2022-02-17T23:00:00Z"
+
+    post:
+      tags:
+        - order_status
+      summary: Create order status for a specific order
+      operationId: createOrderStatus
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Order status details for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status_name:
+                  type: string
+                paid:
+                  type: boolean
+                posted:
+                  type: boolean
+                delivered:
+                  type: boolean
+              required:
+                - status_name
+                - paid
+                - posted
+                - delivered
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status_id: 2
+                order_id: 1
+                status_name: "Shipped"
+                paid: true
+                paid_date: "2022-02-17"
+                posted: true
+                posted_date: "2022-02-18"
+                delivered: false
+                delivered_date: null
+                created_at: "2022-02-18T00:15:00Z"
+
+    put:
+      tags:
+        - order_status
+      summary: Update order status for a specific order
+      operationId: updateOrderStatus
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          description: ID of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated order status details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status_name:
+                  type: string
+                paid:
+                  type: boolean
+                posted:
+                  type: boolean
+                delivered:
+                  type: boolean
+              required:
+                - status_name
+                - paid
+                - posted
+                - delivered
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status_id: 2
+                order_id: 1
+                status_name: "Shipped"
+                paid: true
+                paid_date: "2022-02-17"
+                posted: true
+                posted_date: "2022-02-18"
+                delivered: false
+                delivered_date: null
+                created_at: "2022-02-18T00:15:00Z"
+
+
+components:
+  schemas:
+    OrderStatus:
+      type: object
+      properties:
+        status_id:
+          type: integer
+          description: ID of the order status
+        order_id:
+          type: integer
+          description: ID of the associated order
+        status_name:
+          type: string
+          description: Name of the order status
+        paid:
+          type: boolean
+          description: Indicates if the order is paid
+        paid_date:
+          type: string
+          description: Date when the order was paid
+        posted:
+          type: boolean
+          description: Indicates if the order is posted
+        posted_date:
+          type: string
+          description: Date when the order was posted
+        delivered:
+          type: boolean
+          description: Indicates if the order is delivered
+        delivered_date:
+          type: string
+          description: Date when the order was delivered
+        created_at:
+          type: string
+          description: Timestamp of the order status creation
+      required:
+        - order_id
+        - status_name
+        - paid
+        - posted
+        - delivered
+      example:
+        status_id: 1
+        order_id: 1
+        status_name: "Processing"
+        paid: true
+        paid_date: "2022-02-17"
+        posted: false
+        posted_date: null
+        delivered: false
+        delivered_date: null
+        created_at: "2022-02-17T23:00:00Z"
+        
+    OrderItem:
+      type: object
+      properties:
+        order_item_id:
+          type: integer
+          description: ID of the order item
+        order_id:
+          type: integer
+          description: ID of the associated order
+        product_id:
+          type: integer
+          description: ID of the product in the order item
+        quantity:
+          type: integer
+          description: Quantity of the product in the order item
+        created_at:
+          type: string
+          description: Timestamp of the order item creation
+      required:
+        - order_id
+        - product_id
+        - quantity
+      example:
+        order_item_id: 1
+        order_id: 1
+        product_id: 101
+        quantity: 2
+        created_at: "2022-02-17T22:00:00Z"
+        
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          description: ID of the order
+        user_id:
+          type: integer
+          description: ID of the user placing the order
+        checkout_id:
+          type: integer
+          description: ID of the associated checkout session
+        order_date:
+          type: string
+          description: Timestamp of the order placement
+      required:
+        - user_id
+        - checkout_id
+      example:
+        order_id: 1
+        user_id: 1
+        checkout_id: 1
+        order_date: "2022-02-17T20:30:00Z"
+        
+    Checkout:
+      type: object
+      properties:
+        checkout_id:
+          type: integer
+          description: ID of the checkout session
+        user_id:
+          type: integer
+          description: ID of the user
+        cart_id:
+          type: integer
+          description: ID of the cart associated with the checkout session
+        checkout_time:
+          type: string
+          description: Timestamp of the checkout session
+      required:
+        - user_id
+        - cart_id
+      example:
+        checkout_id: 1
+        user_id: 1
+        cart_id: 1
+        checkout_time: "2022-02-17T19:30:00Z"
+        
+    CartItem:
+      type: object
+      properties:
+        cart_item_id:
+          type: integer
+          description: ID of the cart item
+        cart_id:
+          type: integer
+          description: ID of the cart
+        product_id:
+          type: integer
+          description: ID of the product
+        quantity:
+          type: integer
+          description: Quantity of the product in the cart
+        created_at:
+          type: string
+          description: Timestamp of cart item creation
+      required:
+        - cart_id
+        - product_id
+        - quantity
+      example:
+        cart_item_id: 1
+        cart_id: 1
+        product_id: 101
+        quantity: 2
+        created_at: "2022-02-17T18:15:00Z"
+        
+    Cart:
+      type: object
+      properties:
+        cart_id:
+          type: integer
+          description: ID of the cart
+        user_id:
+          type: integer
+          description: ID of the user
+        created_at:
+          type: string
+          description: Timestamp of cart creation
+      required:
+        - user_id
+      example:
+        cart_id: 1
+        user_id: 101
+        created_at: "2022-02-17T18:00:00Z"
+  
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+          maxLength: 50
+        inventory:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    UserPaymentMethod:
+      type: object
+      properties:
+        payment_method_id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        payment_method_type:
+          type: string
+        card_number:
+          type: string
+        expiration_date:
+          type: string
+          format: date
+        holder_name:
+          type: string
+        cvc:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    UserAddress:
+      type: object
+      properties:
+        address_id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        address_line1:
+          type: string
+        address_line2:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        country:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string

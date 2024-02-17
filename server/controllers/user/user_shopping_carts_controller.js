@@ -22,6 +22,7 @@ exports.createUserShoppingCart = async (req, res) => {
     }
 };
 
+/*
 exports.updateShoppingCart = async (req, res) => {
     const userId = req.params.userId;
     const updatedShoppingCartData = req.body;
@@ -32,6 +33,7 @@ exports.updateShoppingCart = async (req, res) => {
         res.status(404).json({ error: 'Shopping cart not found' });
     }
 }
+*/
 
 exports.deleteShoppingCart = async (req, res) => {
     const userId = req.params.userId;

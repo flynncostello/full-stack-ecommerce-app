@@ -6,6 +6,7 @@ const userAddressesController = require('../controllers/user/user_addresses_cont
 const userPaymentsController = require('../controllers/user/user_payments_controller');
 const userShoppingCartController = require('../controllers/user/user_shopping_carts_controller');
 const userOrdersController = require('../controllers/user/user_orders_controller');
+const userCheckoutController = require('../controllers/user/user_checkouts_controller');
 
 // USER ADDRESS //
 router.get('/:userId/address', userAddressesController.getAddressByUserId);
@@ -24,7 +25,7 @@ router.delete('/:userId/paymentMethods/:paymentId', userPaymentsController.delet
 // USER CART //
 router.get('/:userId/cart', userShoppingCartController.getUserShoppingCarById);
 router.post('/:userId/cart', userShoppingCartController.createUserShoppingCart);
-router.put('/:userId/cart', userShoppingCartController.updateShoppingCart);
+//router.put('/:userId/cart', userShoppingCartController.updateShoppingCart);
 router.delete('/:userId/cart', userShoppingCartController.deleteShoppingCart);
 
 router.get('/:userId/cart/:cartId/items', userShoppingCartController.getCartItems);
@@ -37,7 +38,7 @@ router.delete('/:userId/cart/:cartId/items/:productId', userShoppingCartControll
 router.get('/:userId/orders', userOrdersController.getUserOrders);
 router.get('/:userId/orders/:orderId', userOrdersController.getUserOrder);
 router.post('/:userId/orders', userOrdersController.createOrder);
-router.put('/:userId/orders/:orderId', userOrdersController.updateOrder);
+//router.put('/:userId/orders/:orderId', userOrdersController.updateOrder);
 router.delete('/:userId/orders/:orderId', userOrdersController.deleteOrder);
 
 router.get('/:userId/orders/:orderId/status', userOrdersController.getUserOrderStatus);
@@ -45,7 +46,14 @@ router.put('/:userId/orders/:orderId/status', userOrdersController.updateUserOrd
 router.post('/:userId/orders/:orderId/status', userOrdersController.createUserOrderStatus);
 
 router.get('/:userId/orders/:orderId/items', userOrdersController.getUserOrderItems);
+router.get('/:userId/orders/:orderId/items/:productId', userOrdersController.getUserOrderItems);
 router.post('/:userId/orders/:orderId/items', userOrdersController.createOrderItem);
+
+// USER CHECKOUTS //
+router.get('/:userId/checkouts', userCheckoutController.getUserCheckout);
+router.post('/:userId/checkouts', userCheckoutController.createUserCheckout);
+//router.put('/:userId/checkouts', userCheckoutController.updateUserCheckout);
+router.delete('/:userId/checkouts', userCheckoutController.deleteUserCheckout);
 
 // USERS //
 router.get('/', userController.getAllUsers);

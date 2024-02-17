@@ -33,6 +33,7 @@ exports.createOrder = async (req, res) => {
     }
 };
 
+/*
 exports.updateOrder = async (req, res) => {
     const userId = req.params.userId;
     const orderId = req.params.orderId;
@@ -44,6 +45,7 @@ exports.updateOrder = async (req, res) => {
         res.status(404).json({ error: 'Order not found' });
     }
 }
+*/
 
 exports.deleteOrder = async (req, res) => {
     const userId = req.params.userId;
@@ -94,6 +96,17 @@ exports.getUserOrderItems = async (req, res) => {
     const orderId = req.params.orderId;
     try {
         const orderItems = await userOrdersModel.getOrderItems(orderId);
+        res.json(orderItems);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+exports.getUserOrderItem = async (req, res) => {
+    const orderId = req.params.orderId;
+    const productId = req.params.productId;
+    try {
+        const orderItems = await userOrdersModel.getOrderItems(orderId, productId);
         res.json(orderItems);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });

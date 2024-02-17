@@ -13,7 +13,7 @@ const ProductModel = {
 
     getProductById: async (id) => {
         try {
-            const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+            const result = await pool.query('SELECT * FROM products WHERE product_id = $1', [id]);
             const product = result.rows[0];
             if (product) {
                 return product;
@@ -40,7 +40,7 @@ const ProductModel = {
     updateProduct: async (productId, updatedProductInfo) => {
         const { name, description, price, category, inventory } = updatedProductInfo;
         try {
-            const result = await pool.query('UPDATE products SET name = $1, description = $2, price = $3, category = $4, inventory = $5 WHERE id = $6 RETURNING *', [name, description, price, category, inventory, productId]);
+            const result = await pool.query('UPDATE products SET name = $1, description = $2, price = $3, category = $4, inventory = $5 WHERE product_id = $6 RETURNING *', [name, description, price, category, inventory, productId]);
             const updatedProduct = result.rows[0];
             if (updatedProduct) {
                 return updatedProduct;
@@ -55,7 +55,7 @@ const ProductModel = {
 
     deleteProduct: async (productId) => {
         try {
-            const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [productId]);
+            const result = await pool.query('DELETE FROM products WHERE product_id = $1 RETURNING *', [productId]);
             const deletedProduct = result.rows[0];
         if (deletedProduct) {
             return deletedProduct;

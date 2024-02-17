@@ -13,7 +13,7 @@ const UsersModel = {
 
     getUserById: async (id) => {
         try {
-            const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+            const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
             const user = result.rows[0];
             if (user) {
                 return user;
@@ -40,7 +40,7 @@ const UsersModel = {
     updateUser: async (id, updatedUserData) => {
         const { username, password, first_name, last_name, mobile, email } = updatedUserData;
         try {
-            const result = await pool.query('UPDATE users SET username = $1, password = $2, first_name = $3, last_name = $4, mobile = $5, email = $6 WHERE id = $7 RETURNING *', [username, password, first_name, last_name, mobile, email, id]);
+            const result = await pool.query('UPDATE users SET username = $1, password = $2, first_name = $3, last_name = $4, mobile = $5, email = $6 WHERE user_id = $7 RETURNING *', [username, password, first_name, last_name, mobile, email, id]);
             const updatedUser = result.rows[0];
             if (updatedUser) {
                 return updatedUser;
@@ -55,7 +55,7 @@ const UsersModel = {
 
     deleteUser: async (id) => {
         try {
-            const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+            const result = await pool.query('DELETE FROM users WHERE user_id = $1 RETURNING *', [id]);
             const deletedUser = result.rows[0];
             if (deletedUser) {
                 return deletedUser;

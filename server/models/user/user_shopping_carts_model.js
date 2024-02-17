@@ -4,7 +4,7 @@ const UserShoppingCartModel = {
     // shopping_carts //
     getUserShoppingCart: async (userId) => {
         try {
-            const result = await pool.query('SELECT * FROM shopping_carts WHERE user_id = $1', [userId]);
+            const result = await pool.query('SELECT * FROM carts WHERE user_id = $1', [userId]);
             const shopping_cart = result.rows[0];
             if (shopping_cart) {
                 return shopping_cart;
@@ -18,9 +18,8 @@ const UserShoppingCartModel = {
     },
 
     createUserShoppingCart: async (userId, shoppingCartData) => {
-        const { total } = shoppingCartData;
         try {
-            const result = await pool.query('INSERT INTO shopping_carts (user_id, total) VALUES ($1, $2) RETURNING *', [userId, total]);
+            const result = await pool.query('INSERT INTO carts (user_id) VALUES ($1) RETURNING *', [userId]);
             return result.rows[0];
         } catch (error) {
             console.error('Error creating user shopping cart:', error);
@@ -28,10 +27,11 @@ const UserShoppingCartModel = {
         }
     },
 
+    /*
     updateUserShoppingCart: async (userId, updatedShoppingCartData) => {
         const { total } = updatedShoppingCartData;
         try {
-            const result = await pool.query('UPDATE shopping_carts SET total = $1 WHERE user_id = $2 RETURNING *', [total, userId]);
+            const result = await pool.query('UPDATE carts SET total = $1 WHERE user_id = $2 RETURNING *', [total, userId]);
             const updatedUserShoppingCart = result.rows[0];
             if (updatedUserShoppingCart) {
                 return updatedUserShoppingCart;
@@ -43,10 +43,11 @@ const UserShoppingCartModel = {
             throw error;
         }
     },
+    */
 
     deleteUserShoppingCart: async (userId) => {
         try {
-            const result = await pool.query('DELETE FROM shopping_carts WHERE user_id = $1 RETURNING *', [userId]);
+            const result = await pool.query('DELETE FROM carts WHERE user_id = $1 RETURNING *', [userId]);
             const deletedUserShoppingCart = result.rows[0];
             if (deletedUserShoppingCart) {
                 return deletedUserShoppingCart;
@@ -62,7 +63,7 @@ const UserShoppingCartModel = {
     // cart_items //
     getCartItems: async (shoppingCartId) => {
         try {
-            const result = await pool.query('SELECT * FROM cart_items WHERE shopping_cart_id = $1', [shoppingCartId]);
+            const result = await pool.query('SELECT * FROM cart_items WHERE cart_id = $1', [shoppingCartId]);
             const cart_items = result.rows;
             if (cart_items) {
                 return cart_items;
@@ -77,7 +78,7 @@ const UserShoppingCartModel = {
 
     getCartItem: async (shoppingCartId, productId) => {
         try {
-            const result = await pool.query('SELECT * FROM cart_items WHERE shopping_cart_id = $1 AND product_id = $2', [shoppingCartId, productId]);
+            const result = await pool.query('SELECT * FROM cart_items WHERE cart_id = $1 AND product_id = $2', [shoppingCartId, productId]);
             const cart_item = result.rows[0];
             if (cart_item) {
                 return cart_item;
@@ -93,7 +94,7 @@ const UserShoppingCartModel = {
     createCartItem: async (shoppingCartId, cartItemData) => {
         const { product_id, quantity } = cartItemData;
         try {
-            const result = await pool.query('INSERT INTO cart_items (shopping_cart_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *', [shoppingCartId, product_id, quantity]);
+            const result = await pool.query('INSERT INTO cart_items (cart_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *', [shoppingCartId, product_id, quantity]);
             return result.rows[0];
         } catch (error) {
             console.error('Error creating cart item:', error);
@@ -104,7 +105,7 @@ const UserShoppingCartModel = {
     updateCartItem: async (shoppingCartId, productId, updatedCartItemData) => {
         const { quantity } = updatedCartItemData;
         try {
-            const result = await pool.query('UPDATE cart_items SET quantity = $1 WHERE shopping_cart_id = $2 AND product_id = $3 RETURNING *', [quantity, shoppingCartId, productId]);
+            const result = await pool.query('UPDATE cart_items SET quantity = $1 WHERE cart_id = $2 AND product_id = $3 RETURNING *', [quantity, shoppingCartId, productId]);
             const updatedCartItem = result.rows[0];
             if (updatedCartItem) {
                 return updatedCartItem;
@@ -119,7 +120,7 @@ const UserShoppingCartModel = {
 
     deleteCartItem: async (shoppingCartId, productId) => {
         try {
-            const result = await pool.query('DELETE FROM cart_items WHERE shopping_cart_id = $1 AND product_id = $2 RETURNING *', [shoppingCartId, productId]);
+            const result = await pool.query('DELETE FROM cart_items WHERE cart_id = $1 AND product_id = $2 RETURNING *', [shoppingCartId, productId]);
             const deletedCartItem = result.rows[0];
             if (deletedCartItem) {
                 return deletedCartItem;
